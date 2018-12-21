@@ -42,10 +42,16 @@
 		</div>
 
 		<div class="mdui-textfield">
+		  <h4>防盗链(白名单)<small> 不填写则不启用, 多个用英文 <code>;</code> 分割</small></h4>
+		  <input class="mdui-textfield-input" name="onedrive_hotlink" value="<?=@$config['onedrive_hotlink'];?>"/>
+		  <small>支持通配符 例: <code>*.domain.com</code></small>
+		</div>
+
+		<div class="mdui-textfield">
 		  <h4>缓存类型<small></small></h4>
 		  <select name="cache_type" class="mdui-select">
 			  <?php 
-			 	foreach(['secache', 'filecache', 'memcache'] as $type):
+			 	foreach(['secache', 'filecache', 'memcache', 'redis'] as $type):
 			  ?>
 			  <option value ="<?php echo $type;?>" <?php echo ($type==$cache_type)?'selected':'';?>><?php echo $type;?></option>
 			  <?php endforeach;?>
