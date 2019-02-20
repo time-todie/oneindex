@@ -87,7 +87,8 @@
 			if(is_array($hide_list) && count($hide_list)>0){
 				foreach($hide_list as $hide_dir){
 					foreach($items as $key=>$_array){
-						if(stristr($key,trim($hide_dir)))unset($items[$key]);
+						$buf = trim($hide_dir);
+						if($buf && stristr($key, $buf))unset($items[$key]);
 					}
 				}
 			}
@@ -138,6 +139,15 @@
 			$data = json_decode($resp->content, true);
 			$request = self::request($path,"thumbnails/0?select={$size}");
 			return @$data[$size]['url'];
+		}
+
+		static function share($path){
+			$request = self::request($path,"createLink");
+			$post_data['type'] = 'view';
+			$post_data['scope'] = 'anonymous';
+			$resp = fetch::post($request, json_encode($post_data));
+			$data = json_decode($resp->content, true);
+			return $data;
 		}
 
 		//文件上传函数
