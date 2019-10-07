@@ -60,6 +60,8 @@ class AdminController{
 			config('cache_expire_time', intval($_POST['cache_expire_time']));
 			$_POST['root_path'] = empty($_POST['root_path'])?'?':'';
 			config('root_path', $_POST['root_path']);
+			config('pass_code', $_POST['pass_code']);
+			config('pass_code_salt' , time());
 		}
 
 		$config = config('@base');

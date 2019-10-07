@@ -1,10 +1,11 @@
-<?php 
+<?php
 class IndexController{
 	private $url_path;
 	private $name;
 	private $path;
 	private $items;
 	private $time;
+	private $passcode;
 
 	function __construct(){
 		//获取路径和文件名
@@ -16,14 +17,49 @@ class IndexController{
 		$this->path = get_absolute_path(config('onedrive_root').$this->url_path);
 		//获取文件夹下所有元素
 		$this->items = $this->items($this->path);
+		$this->passcode = config('pass_code');
+		$this->passcode_salt = config('pass_code_salt');
+		$this->ero_token = md5(md5($this->passcode).$this->passcode_salt);
 	}
 
-	
+
+	function loginPage(){
+	    /*if($_COOKIE[$this->passcode])
+        {
+            header('Location: /');
+        }*/
+        return view::load('login');
+            //->with('navs', $navs)
+    }
+
+    function login(){
+	    $passCode = $_POST['passcode']??null;
+
+	    if($passCode != $this->passcode) {
+            $url = $_SERVER['REQUEST_URI'].'/';
+            header('Location: '.$url);
+            return null;
+        }
+
+        $currentTime = time();
+        $token = $this->ero_token;
+        setcookie('ero_token', $token ,  0);
+        setcookie('latest_login_time' , $currentTime ,  0);
+        header('Location: /');
+
+
+
+
+    }
+
 	function index(){
+
 		//是否404
 		$this->is404();
 
 		$this->is_password();
+
+		$this->is_login();
 
 		header("Expires:-1");
 		header("Cache-Control:no_cache");
@@ -43,7 +79,7 @@ class IndexController{
 		}else{
 			$this->items['.password']['path'] = get_absolute_path($this->path).'.password';
  		}
-		
+
 		$password = $this->get_content($this->items['.password']);
 		list($password) = explode("\n",$password);
 		$password = trim($password);
@@ -53,7 +89,7 @@ class IndexController{
 		}
 
 		$this->password($password);
-		
+
 	}
 
 	function password($password){
@@ -82,7 +118,7 @@ class IndexController{
 	}
 
 
-	
+
 	//文件夹
 	function dir(){
 		$root = get_absolute_path(dirname($_SERVER['SCRIPT_NAME'])).config('root_path');
@@ -133,7 +169,7 @@ class IndexController{
 		$http_type = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https')) ? 'https://' : 'http://';
 		$uri = onedrive::urlencode(get_absolute_path($this->url_path.'/'.$this->name));
 		$data['url'] = $http_type.$_SERVER['HTTP_HOST'].$root.$uri;
-		
+
 
 		$show = config('show');
 		foreach($show as $n=>$exts){
@@ -178,7 +214,7 @@ class IndexController{
 		if(!empty($this->name)){
 			$navs[$this->name] = end($navs).urlencode($this->name);
 		}
-		
+
 		return $navs;
 	}
 
@@ -208,4 +244,18 @@ class IndexController{
 			return;
 		}
 	}
+
+	function is_login()
+    {
+        if(!$this->passcode){
+            return null;
+        }
+
+        $ClientEroToken = $_COOKIE['ero_token']??null;
+        if(!$ClientEroToken || $ClientEroToken != $this->ero_token){
+
+            $url = config('root_path').'/theworldonlyhentaisknow';
+            header('Location: '.$url);
+        }
+    }
 }

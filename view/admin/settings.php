@@ -12,6 +12,11 @@
 		  <input class="mdui-textfield-input" type="text" name="site_name" value="<?php echo $config['site_name'];?>"/>
 		</div>
 
+        <div class="mdui-textfield">
+            <h4>登陆秘纹</h4>
+            <input class="mdui-textfield-input" type="password" name="pass_code" value="<?php echo $config['pass_code'];?>"/>
+        </div>
+
 		<div class="mdui-textfield">
 		  <h4>网站主题<small></small></h4>
 		  <select name="style" class="mdui-select">

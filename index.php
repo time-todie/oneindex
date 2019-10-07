@@ -92,5 +92,7 @@ route::group(function () {
 
 	return $referer;
 }, function() {
+    Route::get('theworldonlyhentaisknow' , 'IndexController@loginPage');
+    Route::post('theworldonlyhentaisknow' , 'IndexController@login');
     route::any('{path:#all}','IndexController@index');
 });
