@@ -13,7 +13,7 @@
 		</div>
 
         <div class="mdui-textfield">
-            <h4>登陆秘纹</h4>
+            <h4>访问密码</h4>
             <input class="mdui-textfield-input" type="password" name="pass_code" value="<?php echo $config['pass_code'];?>"/>
         </div>
 

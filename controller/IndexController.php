@@ -254,7 +254,7 @@ class IndexController{
         $ClientEroToken = $_COOKIE['ero_token']??null;
         if(!$ClientEroToken || $ClientEroToken != $this->ero_token){
 
-            $url = config('root_path').'/theworldonlyhentaisknow';
+            $url = config('root_path').'/authentication';
             header('Location: '.$url);
         }
     }
